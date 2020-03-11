@@ -746,6 +746,7 @@ class TableList(object):
             bold_cells_dict = {}
             for table in self._tables:
                 sheet_name = "page-{}-table-{}".format(table.page, table.order)
+                bold_cells_dict[sheet_name] = table.boldcells
                 table.df.to_excel(writer, sheet_name=sheet_name, encoding="utf-8")
             writer.save()
             wb = load_workbook(filepath)
