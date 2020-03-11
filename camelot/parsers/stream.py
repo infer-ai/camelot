@@ -12,7 +12,6 @@ from .base import BaseParser
 from ..core import TextEdges, Table
 from ..utils import text_in_bbox, get_table_index, compute_accuracy, compute_whitespace
 
-
 logger = logging.getLogger("camelot")
 
 
@@ -403,9 +402,13 @@ class Stream(BaseParser):
                     flag_size=self.flag_size,
                     strip_text=self.strip_text,
                 )
+
                 if indices[:2] != (-1, -1):
                     pos_errors.append(error)
                     for r_idx, c_idx, text in indices:
+                        if text.startswith('bold') and text.endswith('bold'):
+                            table.boldcells.append((r_idx, c_idx))
+                            text = text.strip('bold')
                         table.cells[r_idx][c_idx].text = text
         accuracy = compute_accuracy([[100, pos_errors]])
 

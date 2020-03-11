@@ -6,6 +6,8 @@ import zipfile
 import tempfile
 from itertools import chain
 from operator import itemgetter
+from openpyxl import load_workbook
+from openpyxl.styles import Font
 
 import numpy as np
 import pandas as pd
@@ -349,6 +351,7 @@ class Table(object):
         self.whitespace = 0
         self.order = None
         self.page = None
+        self.boldcells = []
 
     def __repr__(self):
         return "<{} shape={}>".format(self.__class__.__name__, self.shape)
@@ -740,10 +743,17 @@ class TableList(object):
         elif f == "excel":
             filepath = os.path.join(dirname, basename)
             writer = pd.ExcelWriter(filepath)
+            bold_cells_dict = {}
             for table in self._tables:
                 sheet_name = "page-{}-table-{}".format(table.page, table.order)
                 table.df.to_excel(writer, sheet_name=sheet_name, encoding="utf-8")
             writer.save()
+            wb = load_workbook(filepath)
+            for sheet, cells in bold_cells_dict.items():
+                ws = wb[sheet]
+                for row, column in cells:
+                    ws.cell(row+2, column+2).font = Font(bold=True)
+            wb.save(filepath)
             if compress:
                 zipname = os.path.join(os.path.dirname(path), root) + ".zip"
                 with zipfile.ZipFile(zipname, "w", allowZip64=True) as z:
