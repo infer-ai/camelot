@@ -408,7 +408,6 @@ class Stream(BaseParser):
                     for r_idx, c_idx, text in indices:
                         if text.startswith('bold') and text.endswith('bold'):
                             table.boldcells.append((r_idx, c_idx))
-                            text = text.strip('bold')
                         table.cells[r_idx][c_idx].text = text
         accuracy = compute_accuracy([[100, pos_errors]])
 
