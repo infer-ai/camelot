@@ -753,7 +753,7 @@ class TableList(object):
             for sheet, cells in bold_cells_dict.items():
                 ws = wb[sheet]
                 for row, column in cells:
-                    if not (ws.cell(row+2, column+2).value.startswith('bold') and ws.cell.value.endswith('bold')):
+                    if not (ws.cell(row+2, column+2).value.startswith('bold') and ws.cell(row+2, column+2).value.endswith('bold')):
                         ws.cell(row+2, column+2).value = f'bold{ws.cell(row+2, column+2).value}bold'
                     ws.cell(row+2, column+2).font = Font(bold=True)
             wb.save(filepath)
